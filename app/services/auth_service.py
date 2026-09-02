@@ -5,13 +5,13 @@ from app.models.user import User
 from app.repositories.user_repository import UserRepository
 from app.security import hash_password, verify_password, create_access_token
 
-
+# classe que centraliza a lógica de negócio relacionada à autenticação
 class AuthService:
     def __init__(self, db: Session):
         self.user_repo = UserRepository(db)
 
+    #metodo para cadastrar novo usuario
     def register(self, user_data: UserCreate) -> User:
-        # Impede o cadastro de usuarios com o mesmo e-mail
         existing_user = self.user_repo.get_by_email(user_data.email)
         if existing_user:
             raise UserAlreadyExistsError()
@@ -27,8 +27,8 @@ class AuthService:
 
         return self.user_repo.create(new_user)
 
+    #Busca o usuario por e-mail e confere a senha
     def authenticate(self, login_data: UserLogin) -> TokenResponse:
-        # Busca o usuario por e-mail e confere a senha
         user = self.user_repo.get_by_email(login_data.email)
         if not user or not verify_password(login_data.password, user.password_hash):
             raise InvalidCredentialsError()

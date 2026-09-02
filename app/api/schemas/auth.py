@@ -18,7 +18,7 @@ class UserLogin(BaseModel):
     password: str
 
 
-# Schema de saida com dados do usuario (sem expor a senha)
+# Schema de saida com dados do usuario
 class UserResponse(BaseModel):
     id: uuid.UUID
     name: str

@@ -2,7 +2,7 @@ import uuid
 from sqlalchemy.orm import Session
 from app.models.user import User
 
-
+#classe repository para operações no banco de dados com o usuario
 class UserRepository:
     def __init__(self, db: Session):
         self.db = db
