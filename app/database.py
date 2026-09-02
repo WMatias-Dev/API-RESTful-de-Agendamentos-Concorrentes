@@ -9,7 +9,7 @@ engine = create_engine(
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-
+#para obter uma sessão de banco de dados
 def get_db():
     db = SessionLocal()
     try:

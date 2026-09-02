@@ -6,12 +6,12 @@ from sqlalchemy.dialects.postgresql import UUID, ExcludeConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import Base
 
-
+#enumeração para definir o status do agendamento
 class AppointmentStatus(str, enum.Enum):
     SCHEDULED = "SCHEDULED"
     CANCELED = "CANCELED"
 
-
+# modelo de agendamento
 class Appointment(Base):
     __tablename__ = "appointments"
 

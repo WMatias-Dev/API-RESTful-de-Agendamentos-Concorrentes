@@ -6,12 +6,12 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 from app.models.base import Base
 
-
+#enumeração para definir o tipo de usuario
 class UserRole(str, enum.Enum):
     CLIENT = "CLIENT"
     PROFESSIONAL = "PROFESSIONAL"
 
-
+# modelo de usuario
 class User(Base):
     __tablename__ = "users"
 
