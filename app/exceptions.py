@@ -24,3 +24,9 @@ class NotFoundError(AppException):
 class AppointmentConflictError(AppException):
     def __init__(self, message: str = "O horário solicitado não está disponível."):
         super().__init__(message, status_code=409)
+
+#classe de exceção para indicar ação não permitida
+class ForbiddenError(AppException):
+    def __init__(self, message: str = "Acesso não permitido para este recurso."):
+        super().__init__(message, status_code=403)
+
