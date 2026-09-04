@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from app.api.routes.auth import router as auth_router
+from app.api.routes.appointments import router as appointments_router
+from app.api.routes.availability import router as availability_router
 from app.exceptions import AppException
 
 app = FastAPI(
@@ -21,8 +23,10 @@ def app_exception_handler(request: Request, exc: AppException):
 
 # Registro de rotas
 app.include_router(auth_router, prefix="/api/v1")
+app.include_router(appointments_router, prefix="/api/v1")
+app.include_router(availability_router, prefix="/api/v1")
 
-
+#Endpoint de health check
 @app.get("/health", tags=["Health"])
 def health_check():
     return {"status": "ok"}

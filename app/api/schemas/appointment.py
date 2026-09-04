@@ -32,3 +32,11 @@ class AppointmentResponse(BaseModel):
     updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# Schema de retorno para blocos de horario e disponibilidade
+class TimeSlotResponse(BaseModel):
+    start_time: datetime
+    end_time: datetime
+    available: bool
+
