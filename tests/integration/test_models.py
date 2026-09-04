@@ -144,3 +144,63 @@ def test_canceled_appointment_allows_new_booking(db_session):
 
     assert app_2.id is not None
     assert app_2.status == AppointmentStatus.SCHEDULED
+
+
+def test_appointment_repository_operations(db_session):
+    from app.repositories.appointment_repository import AppointmentRepository
+
+    repo = AppointmentRepository(db_session)
+
+    # Cria profissional e cliente
+    professional = User(
+        name="Dra. Camila",
+        email=f"camila_{uuid.uuid4().hex[:6]}@example.com",
+        password_hash="fake_hash",
+        role=UserRole.PROFESSIONAL,
+    )
+    client = User(
+        name="Cliente Roberto",
+        email=f"roberto_{uuid.uuid4().hex[:6]}@example.com",
+        password_hash="fake_hash",
+        role=UserRole.CLIENT,
+    )
+    db_session.add_all([professional, client])
+    db_session.commit()
+
+    start = datetime.now(timezone.utc) + timedelta(days=3, hours=9)
+    end = start + timedelta(hours=1)
+
+    # 1. Criação via repositório
+    new_app = Appointment(
+        client_id=client.id,
+        professional_id=professional.id,
+        start_time=start,
+        end_time=end,
+        notes="Primeira consulta",
+    )
+    created = repo.create(new_app)
+    assert created.id is not None
+    assert created.notes == "Primeira consulta"
+
+    # 2. Busca por id
+    found = repo.get_by_id(created.id)
+    assert found is not None
+    assert found.id == created.id
+
+    # 3. Listagem por usuário
+    client_apps = repo.list_by_user(client.id)
+    assert len(client_apps) == 1
+    assert client_apps[0].id == created.id
+
+    # 4. Listagem por data do profissional
+    active_apps = repo.list_active_by_professional_and_date_range(
+        professional_id=professional.id,
+        start_date=start - timedelta(hours=1),
+        end_date=end + timedelta(hours=1),
+    )
+    assert len(active_apps) == 1
+
+    # 5. Atualização (ex: cancelamento)
+    created.status = AppointmentStatus.CANCELED
+    updated = repo.update(created)
+    assert updated.status == AppointmentStatus.CANCELED
